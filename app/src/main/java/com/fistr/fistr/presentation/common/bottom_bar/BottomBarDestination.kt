@@ -1,4 +1,4 @@
-package com.fistr.fistr.presentation.components.bottom_bar
+package com.fistr.fistr.presentation.common.bottom_bar
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons

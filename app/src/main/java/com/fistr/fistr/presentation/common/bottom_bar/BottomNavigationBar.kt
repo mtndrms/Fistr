@@ -1,4 +1,4 @@
-package com.fistr.fistr.presentation.components.bottom_bar
+package com.fistr.fistr.presentation.common.bottom_bar
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -16,6 +16,7 @@ import com.ramcosta.composedestinations.utils.startDestination
 @Composable
 fun BottomNavigationBar(navController: NavController) {
     NavigationBar(
+        containerColor = MaterialTheme.colorScheme.secondaryContainer,
         content = {
             val currentDestination =
                 navController.currentDestinationAsState().value

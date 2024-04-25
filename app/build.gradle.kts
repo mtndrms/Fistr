@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.di)
+    alias(libs.plugins.serialization)
+    kotlin("kapt")
 }
 
 android {
@@ -31,11 +34,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "21"
+        jvmTarget = "1.8"
     }
     buildFeatures {
         compose = true
@@ -48,6 +51,9 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    kapt {
+        correctErrorTypes = true
+    }
 }
 
 dependencies {
@@ -59,9 +65,27 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.datastore)
+
+    //compose destinations
     implementation(libs.compose.destinations)
     ksp(libs.compose.destinations.ksp)
     implementation(libs.compose.destinations.bottomsheet)
+
+    //dependecy injection
+    implementation(libs.hilt)
+    implementation(libs.hilt.navigation.compose)
+    kapt(libs.hilt.compiler)
+
+    //room
+    implementation(libs.room)
+    ksp(libs.room.compiler)
+
+    //supabase
+    implementation(platform(libs.supabase.bom))
+    implementation(libs.supabase.postgrestkt)
+    implementation(libs.ktor.client)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
