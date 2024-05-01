@@ -3,12 +3,12 @@ package com.fistr.fistr.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -19,12 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.fistr.fistr.presentation.common.bottom_bar.BottomNavigationBar
 import com.fistr.fistr.presentation.feature.login.LoginScreen
-import com.fistr.fistr.presentation.feature.splash.SplashScreen
 import com.fistr.fistr.presentation.theme.AppTheme
+import com.fistr.fistr.utils.SetSystemBarColors
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.generated.NavGraphs
 import com.ramcosta.composedestinations.generated.destinations.LoginScreenDestination
-import com.ramcosta.composedestinations.generated.destinations.SplashScreenDestination
 import com.ramcosta.composedestinations.manualcomposablecalls.composable
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -41,6 +40,12 @@ class MainActivity : ComponentActivity() {
             val snackbarHostState = remember { SnackbarHostState() }
 
             AppTheme {
+                SetSystemBarColors(
+                    statusBarColor = appState.systemBarColors.first,
+                    navigationBarColor = appState.systemBarColors.second,
+                    darkTheme = isSystemInDarkTheme()
+                )
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.surface
