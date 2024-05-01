@@ -66,33 +66,33 @@ private fun Content(
             .padding(bottom = 10.dp)
             .then(modifier)
     ) {
-        ChatTopBar(navigateToBack = navigateToBack)
+        ChatTopBar(fullName = uiState.fullName, navigateToBack = navigateToBack)
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(1.dp)
                 .shadow(1.dp)
-                .alpha(0.05f)
+                .alpha(0.01f)
                 .background(MaterialTheme.colorScheme.onBackground)
         )
-        when (uiState) {
-            is ChatUiState.Loading -> LoadingState()
-            is ChatUiState.LoadFailed -> LoadFailedState(
-                uiState = uiState,
+        when (uiState.data) {
+            is DataState.Loading -> LoadingState()
+            is DataState.LoadFailed -> LoadFailedState(
+                uiState = uiState.data,
                 modifier = Modifier.weight(1f)
             )
 
-            is ChatUiState.Success -> SuccessState(
-                uiState = uiState,
+            is DataState.Success -> SuccessState(
+                uiState = uiState.data,
                 modifier = Modifier.weight(1f)
             )
         }
-        ComposeField()
+        ComposeField(uiState = uiState.message, onMessageValueChange = { uiState.message = it })
     }
 }
 
 @Composable
-private fun ChatTopBar(navigateToBack: () -> Unit) {
+private fun ChatTopBar(fullName: String, navigateToBack: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -107,11 +107,16 @@ private fun ChatTopBar(navigateToBack: () -> Unit) {
                 .clip(RoundedCornerShape(20.dp))
                 .clickable { navigateToBack() }
         ) {
-            Image(imageVector = FistrIcons.back, contentDescription = "go back")
+            Image(
+                imageVector = FistrIcons.back,
+                contentDescription = "go back",
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+            )
+            Spacer(modifier = Modifier.width(3.dp))
             Image(
                 imageVector = FistrIcons.person,
                 contentDescription = stringResource(id = R.string.profile),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceContainer),
                 modifier = Modifier
                     .background(
                         color = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -122,20 +127,21 @@ private fun ChatTopBar(navigateToBack: () -> Unit) {
         }
         Spacer(modifier = Modifier.width(10.dp))
         Text(
-            text = "John Doe",
+            text = fullName,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.weight(1f)
         )
         Spacer(modifier = Modifier.width(10.dp))
         Image(
             imageVector = FistrIcons.more,
-            contentDescription = stringResource(R.string.more)
+            contentDescription = stringResource(R.string.more),
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
         )
     }
 }
 
 @Composable
-private fun ComposeField() {
+private fun ComposeField(uiState: String, onMessageValueChange: (String) -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -143,24 +149,26 @@ private fun ComposeField() {
             .height(64.dp)
             .padding(horizontal = 10.dp)
             .clip(RoundedCornerShape(15.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .background(MaterialTheme.colorScheme.secondaryContainer)
             .padding(horizontal = 15.dp)
     ) {
         Image(
             painter = painterResource(id = FistrIcons.emoji),
             contentDescription = stringResource(id = R.string.profile),
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.inverseSurface),
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondaryContainer),
             modifier = Modifier.clip(CircleShape)
         )
         Spacer(modifier = Modifier.width(10.dp))
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = uiState,
+            onValueChange = {
+                onMessageValueChange(it)
+            },
             colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = MaterialTheme.colorScheme.surfaceContainer,
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceContainer,
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer
+                focusedIndicatorColor = MaterialTheme.colorScheme.secondaryContainer,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.secondaryContainer,
+                focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer
             ),
             placeholder = { Text(text = stringResource(id = R.string.message)) },
             modifier = Modifier.weight(1f)
@@ -169,6 +177,7 @@ private fun ComposeField() {
         Image(
             imageVector = FistrIcons.send,
             contentDescription = stringResource(id = R.string.profile),
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondaryContainer),
             modifier = Modifier.clip(CircleShape)
         )
     }
@@ -180,7 +189,7 @@ private fun LoadingState(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun LoadFailedState(uiState: ChatUiState.LoadFailed, modifier: Modifier = Modifier) {
+private fun LoadFailedState(uiState: DataState.LoadFailed, modifier: Modifier = Modifier) {
     Text(
         text = uiState.errorMessage.asString(),
         modifier = Modifier.then(modifier)
@@ -188,7 +197,7 @@ private fun LoadFailedState(uiState: ChatUiState.LoadFailed, modifier: Modifier 
 }
 
 @Composable
-private fun SuccessState(uiState: ChatUiState.Success, modifier: Modifier = Modifier) {
+private fun SuccessState(uiState: DataState.Success, modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -215,6 +224,6 @@ private fun SuccessState(uiState: ChatUiState.Success, modifier: Modifier = Modi
 private fun PreviewChatScreen() {
     Content(
         navigateToBack = {},
-        uiState = ChatUiState.Success(FakeMessageData.getAllMessagesForChat(2))
+        uiState = ChatUiState(data = DataState.Success(FakeMessageData.getAllMessagesForChat(2)))
     )
 }

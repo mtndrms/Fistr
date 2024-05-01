@@ -27,7 +27,9 @@ class ChatViewModel @Inject constructor(
     private val appRepository: AppRepository,
     private val getAllMessagesForChatUseCase: GetAllMessagesForChatUseCase
 ) : ViewModel() {
-    private val _uiState: MutableStateFlow<ChatUiState> = MutableStateFlow(ChatUiState.Loading)
+    private val _uiState: MutableStateFlow<ChatUiState> = MutableStateFlow(
+        ChatUiState(data = DataState.Loading)
+    )
     val uiState = _uiState.asStateFlow()
 
     private val navArgs: ChatScreenNavArgs = savedStateHandle.navArgs()
@@ -36,26 +38,29 @@ class ChatViewModel @Inject constructor(
         viewModelScope.launch {
             val userID = appRepository.getLoggedInUserID()
             getAllMessagesForChat(userID = userID, chatID = navArgs.chatID)
+            _uiState.update { it.copy(fullName = navArgs.fullName) }
         }
     }
 
     private fun getAllMessagesForChat(userID: Int, chatID: Int) {
         getAllMessagesForChatUseCase(userID, chatID).map { result ->
             when (result) {
-                is Result.Error -> ChatUiState.LoadFailed(result.error.asText())
-                is Result.Success -> ChatUiState.Success(result.data)
+                is Result.Error -> DataState.LoadFailed(result.error.asText())
+                is Result.Success -> DataState.Success(result.data)
             }
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = ChatUiState.Loading
+            initialValue = DataState.Loading
         ).onEach { newValue ->
             _uiState.update {
-                when (newValue) {
-                    is ChatUiState.Loading -> newValue
-                    is ChatUiState.LoadFailed -> newValue
-                    is ChatUiState.Success -> newValue
-                }
+                it.copy(
+                    data = when (newValue) {
+                        is DataState.Loading -> newValue
+                        is DataState.LoadFailed -> newValue
+                        is DataState.Success -> newValue
+                    }
+                )
             }
         }.launchIn(viewModelScope)
     }
