@@ -15,13 +15,10 @@ import com.ramcosta.composedestinations.annotation.RootGraph
 
 @Destination<RootGraph>
 @Composable
-fun HomeScreen() {
-    val viewModel: HomeViewModel = hiltViewModel()
+fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Content(
-        uiState = uiState
-    )
+    Content(uiState = uiState)
 }
 
 @Composable
@@ -35,5 +32,11 @@ private fun Content(
         modifier = Modifier.fillMaxSize()
     ) {
         Text(text = "Home Screen")
+
+        uiState.user?.let { user ->
+            Text(text = "Logged in user id: ${user.id}")
+            Text(text = "Logged in user username: ${user.username}")
+            Text(text = "Logged in user full name: ${user.fullName}")
+        }
     }
 }

@@ -7,6 +7,9 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.ramcosta.composedestinations.generated.destinations.BrowseScreenDestination
+import com.ramcosta.composedestinations.generated.destinations.ChatsScreenDestination
+import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.LoginScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.RegisterScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.SplashScreenDestination
@@ -22,19 +25,18 @@ fun rememberAppState(
     }
 }
 
-fun NavDestination?.shouldHideBottomNavigationOnThisDestinations() =
+fun NavDestination?.shouldShowBottomNavigationOnThisDestinations() =
     when (this?.route) {
-        SplashScreenDestination.route -> true
-        LoginScreenDestination.route -> true
-        RegisterScreenDestination.route -> true
+        HomeScreenDestination.route -> true
+        BrowseScreenDestination.route -> true
+        ChatsScreenDestination.route -> true
         else -> false
     }
-
 
 class AppState(val navController: NavHostController, val coroutineScope: CoroutineScope) {
     private val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
     val shouldShowBottomNavigation: Boolean
-        @Composable get() = !currentDestination.shouldHideBottomNavigationOnThisDestinations()
+        @Composable get() = currentDestination.shouldShowBottomNavigationOnThisDestinations()
 }

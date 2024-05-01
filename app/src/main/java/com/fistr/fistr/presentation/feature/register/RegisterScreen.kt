@@ -11,14 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavOptions
 import com.fistr.fistr.R
+import com.fistr.fistr.presentation.common.FistrIcons
 import com.fistr.fistr.utils.avoidCreatingBackStackEntry
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
@@ -116,7 +115,7 @@ private fun Content(
                     onPasswordValueChange(it)
                 }
             )
-            Spacer(modifier = Modifier.height(25.dp))
+            Spacer(modifier = Modifier.height(15.dp))
             Button(
                 onClick = {
                     val isRegisterSuccessful = onRegisterClick(
@@ -169,7 +168,7 @@ private fun EmailSection(
         },
         leadingIcon = {
             Icon(
-                imageVector = Icons.Default.Email,
+                imageVector = FistrIcons.email,
                 contentDescription = stringResource(id = R.string.e_mail).lowercase(),
                 tint = if (isError) {
                     MaterialTheme.colorScheme.error
@@ -181,7 +180,7 @@ private fun EmailSection(
         trailingIcon = {
             if (value.isNotEmpty()) {
                 Icon(
-                    imageVector = Icons.Default.Clear,
+                    imageVector = FistrIcons.clear,
                     contentDescription = "clear",
                     tint = if (isError) {
                         MaterialTheme.colorScheme.error
@@ -198,6 +197,12 @@ private fun EmailSection(
                 text = if (isError) errorMessage else ""
             )
         },
+        colors = TextFieldDefaults.colors(
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceVariant,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            errorPlaceholderColor = MaterialTheme.colorScheme.error
+        ),
         modifier = Modifier.fillMaxWidth()
     )
 
@@ -223,7 +228,7 @@ private fun UsernameSection(
         },
         leadingIcon = {
             Icon(
-                painter = painterResource(id = R.drawable.ic_tag),
+                painter = painterResource(id = FistrIcons.username),
                 contentDescription = stringResource(id = R.string.username).lowercase(),
                 tint = if (isError) {
                     MaterialTheme.colorScheme.error
@@ -235,7 +240,7 @@ private fun UsernameSection(
         trailingIcon = {
             if (username.isNotEmpty()) {
                 Icon(
-                    imageVector = Icons.Default.Clear,
+                    imageVector = FistrIcons.clear,
                     contentDescription = "clear",
                     tint = if (isError) {
                         MaterialTheme.colorScheme.error
@@ -250,6 +255,12 @@ private fun UsernameSection(
         supportingText = {
             Text(text = errorMessage)
         },
+        colors = TextFieldDefaults.colors(
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceVariant,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            errorPlaceholderColor = MaterialTheme.colorScheme.error
+        ),
         modifier = Modifier.fillMaxWidth()
     )
 }
@@ -275,7 +286,7 @@ private fun PasswordSection(
         },
         leadingIcon = {
             Icon(
-                painter = painterResource(id = R.drawable.ic_password),
+                painter = painterResource(id = FistrIcons.password),
                 contentDescription = stringResource(id = R.string.password).lowercase(),
                 tint = if (isError) {
                     MaterialTheme.colorScheme.error
@@ -287,7 +298,7 @@ private fun PasswordSection(
         trailingIcon = {
             if (password.isNotEmpty()) {
                 Icon(
-                    imageVector = Icons.Default.Clear,
+                    imageVector = FistrIcons.clear,
                     contentDescription = "clear",
                     tint = if (isError) {
                         MaterialTheme.colorScheme.error
@@ -302,6 +313,12 @@ private fun PasswordSection(
         supportingText = {
             Text(text = errorMessage)
         },
+        colors = TextFieldDefaults.colors(
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceVariant,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            errorPlaceholderColor = MaterialTheme.colorScheme.error
+        ),
         modifier = Modifier.fillMaxWidth()
     )
 }
@@ -315,6 +332,10 @@ private fun PreviewRegisterScreen() {
         onUsernameValueChange = {},
         onPasswordValueChange = {},
         onRegisterClick = { _, _, _ -> true },
-        uiState = RegisterUiState()
+        uiState = RegisterUiState(
+            email = "john@doe.com",
+            username = "john-doe",
+            password = "123456Abc."
+        )
     )
 }

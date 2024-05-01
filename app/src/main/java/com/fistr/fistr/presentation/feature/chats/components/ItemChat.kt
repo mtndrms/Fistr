@@ -1,4 +1,4 @@
-package com.fistr.fistr.presentation.feature.messages.components
+package com.fistr.fistr.presentation.feature.chats.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.AccountCircle
@@ -22,19 +21,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewFontScale
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fistr.fistr.R
 
 @Composable
-fun ItemMessage(username: String, messagePreview: String, modifier: Modifier = Modifier) {
+fun ItemChat(username: String, messagePreview: String, modifier: Modifier = Modifier) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -89,7 +86,7 @@ fun ItemMessage(username: String, messagePreview: String, modifier: Modifier = M
 @Composable
 @PreviewFontScale
 private fun PreviewItemMessage() {
-    ItemMessage(
+    ItemChat(
         username = "John Doe",
         messagePreview = "You can hover over a preview to see the outlines of the composables contained within."
     )

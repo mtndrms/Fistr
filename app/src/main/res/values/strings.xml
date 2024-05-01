@@ -31,4 +31,8 @@
     <string name="your_username_cannot_contain_symbols">Your username cannot contain symbols.</string>
     <string name="this_field_cannot_be_empty">This field cannot be empty.</string>
     <string name="please_provide_a_valid_email_address">Please provide a valid email address.</string>
+    <string name="keep_me_signed_in">Keep me signed in</string>
+    <string name="incorrect_login_credentials_please_try_again">Incorrect login credentials. Please try again.</string>
+    <string name="more">more</string>
+    <string name="message">Message</string>
 </resources>

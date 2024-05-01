@@ -1,6 +1,5 @@
 package com.fistr.fistr.presentation.feature.splash
 
-import android.os.CountDownTimer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.MutableTransitionState
@@ -19,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +27,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavOptions
 import com.fistr.fistr.R
 import com.fistr.fistr.utils.avoidCreatingBackStackEntry
@@ -36,11 +38,18 @@ import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestina
 import com.ramcosta.composedestinations.generated.destinations.LoginScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.SplashScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.coroutines.delay
 
 @Destination<RootGraph>(start = true)
 @Composable
-fun SplashScreen(navigator: DestinationsNavigator) {
+fun SplashScreen(
+    navigator: DestinationsNavigator,
+    viewModel: SplashViewModel = hiltViewModel()
+) {
+    val isKeepMeSignedInActive by viewModel.isKeepMeSignedInOnState.collectAsStateWithLifecycle()
+
     Content(
+        isKeepMeSignedInOn = isKeepMeSignedInActive,
         navigateToLoginScreen = {
             navigator.navigate(
                 direction = LoginScreenDestination(),
@@ -62,23 +71,20 @@ fun SplashScreen(navigator: DestinationsNavigator) {
 
 @Composable
 private fun Content(
+    isKeepMeSignedInOn: Boolean,
     navigateToLoginScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit
 ) {
     val iconState = remember { MutableTransitionState(false).apply { targetState = true } }
     val titleState = remember { MutableTransitionState(false).apply { targetState = true } }
 
-    LaunchedEffect(key1 = true) {
-        object : CountDownTimer(3000, 1000) {
-            override fun onTick(millisUntilFinished: Long) {}
-            override fun onFinish() {
-                if (false) {
-                    navigateToHomeScreen()
-                } else {
-                    navigateToLoginScreen()
-                }
-            }
-        }.start()
+    LaunchedEffect(key1 = isKeepMeSignedInOn) {
+        delay(3000)
+        if (isKeepMeSignedInOn) {
+            navigateToHomeScreen()
+        } else {
+            navigateToLoginScreen()
+        }
     }
 
     Column(
@@ -117,5 +123,9 @@ private fun Content(
 @Preview
 @Composable
 private fun PreviewSplashScreen() {
-    Content(navigateToLoginScreen = {}, navigateToHomeScreen = {})
+    Content(
+        isKeepMeSignedInOn = false,
+        navigateToLoginScreen = {},
+        navigateToHomeScreen = {},
+    )
 }

@@ -6,7 +6,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-class UserDataValidatorTest {
+class UserEntityDataValidatorTest {
     private lateinit var userDataValidator: UserDataValidator
 
     @Before

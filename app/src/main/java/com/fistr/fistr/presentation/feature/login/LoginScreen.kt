@@ -13,18 +13,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -37,6 +41,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavOptions
 import com.fistr.fistr.R
+import com.fistr.fistr.presentation.common.FistrIcons
+import com.fistr.fistr.presentation.common.SnackbarOptions
 import com.fistr.fistr.utils.avoidCreatingBackStackEntry
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
@@ -47,7 +53,11 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination<RootGraph>
 @Composable
-fun LoginScreen(navigator: DestinationsNavigator, viewModel: LoginViewModel = hiltViewModel()) {
+fun LoginScreen(
+    showSnackbar: (SnackbarOptions) -> Unit,
+    navigator: DestinationsNavigator,
+    viewModel: LoginViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Content(
@@ -60,16 +70,13 @@ fun LoginScreen(navigator: DestinationsNavigator, viewModel: LoginViewModel = hi
             )
         },
         navigateToRegisterScreen = {
-            navigator.navigate(
-                direction = RegisterScreenDestination(),
-                navOptions = NavOptions.Builder()
-                    .avoidCreatingBackStackEntry(LoginScreenDestination.route)
-                    .build()
-            )
+            navigator.navigate(direction = RegisterScreenDestination())
         },
         onUserIdentiferValueChange = viewModel::onUserIdentifierValueChange,
         onLogInClick = viewModel::onLogInClick,
         onPasswordValueChange = viewModel::onPasswordValueChange,
+        toogleKeepMeSignedIn = viewModel::toogleKeepMeSignedIn,
+        showSnackbar = showSnackbar,
         uiState = uiState
     )
 }
@@ -79,11 +86,25 @@ private fun Content(
     navigateToHomeScreen: () -> Unit,
     navigateToRegisterScreen: () -> Unit,
     onUserIdentiferValueChange: (String) -> Unit,
-    onLogInClick: (username: String, password: String) -> Boolean,
+    onLogInClick: (username: String, password: String) -> Unit,
     onPasswordValueChange: (String) -> Unit,
+    toogleKeepMeSignedIn: (Boolean) -> Unit,
+    showSnackbar: (SnackbarOptions) -> Unit,
     uiState: LoginUiState,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = uiState.loginStatus, key2 = uiState.loginErrorMessage) {
+        if (uiState.loginStatus && uiState.loginErrorMessage == null) {
+            navigateToHomeScreen()
+        } else {
+            uiState.loginErrorMessage?.let {
+                showSnackbar(SnackbarOptions(message = it.asString(context)))
+            }
+        }
+    }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -101,26 +122,22 @@ private fun Content(
             Spacer(modifier = Modifier.height(25.dp))
             UserIdentifierSection(
                 value = uiState.userIdentifier,
-                isError = uiState.userIdentifierError != null,
-                errorMessage = uiState.userIdentifierError?.asString() ?: "",
+                isError = uiState.userIdentifierErrorMessage != null,
+                errorMessage = uiState.userIdentifierErrorMessage?.asString() ?: "",
                 onValueChange = onUserIdentiferValueChange
             )
             Spacer(modifier = Modifier.height(10.dp))
             PasswordSection(
                 value = uiState.password,
-                isError = uiState.passwordError != null,
-                errorMessage = uiState.passwordError?.asString() ?: "",
+                isError = uiState.passwordErrorMessage != null,
+                errorMessage = uiState.passwordErrorMessage?.asString() ?: "",
                 onValueChange = onPasswordValueChange
             )
+            KeepMeSignedIn(toogleKeepMeSignedIn = toogleKeepMeSignedIn, uiState = uiState)
             Spacer(modifier = Modifier.height(10.dp))
             Button(
                 content = { Text(text = stringResource(R.string.log_in)) },
-                onClick = {
-                    val isAuthSuccessful = onLogInClick(uiState.userIdentifier, uiState.password)
-                    if (isAuthSuccessful) {
-                        navigateToHomeScreen()
-                    }
-                },
+                onClick = { onLogInClick(uiState.userIdentifier, uiState.password) },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -174,7 +191,7 @@ private fun UserIdentifierSection(
         },
         leadingIcon = {
             Icon(
-                imageVector = Icons.Default.Person,
+                imageVector = FistrIcons.person,
                 contentDescription = stringResource(R.string.username_or_e_mail),
                 tint = if (isError) {
                     MaterialTheme.colorScheme.error
@@ -186,7 +203,7 @@ private fun UserIdentifierSection(
         trailingIcon = {
             if (value.isNotEmpty()) {
                 Icon(
-                    imageVector = Icons.Default.Clear,
+                    imageVector = FistrIcons.clear,
                     contentDescription = "clear",
                     tint = if (isError) {
                         MaterialTheme.colorScheme.error
@@ -203,6 +220,12 @@ private fun UserIdentifierSection(
                 Text(text = errorMessage)
             }
         },
+        colors = TextFieldDefaults.colors(
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceVariant,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            errorPlaceholderColor = MaterialTheme.colorScheme.error
+        ),
         modifier = Modifier.fillMaxWidth()
     )
 }
@@ -227,7 +250,7 @@ private fun PasswordSection(
         },
         leadingIcon = {
             Icon(
-                painter = painterResource(id = R.drawable.ic_password),
+                painter = painterResource(id = FistrIcons.password),
                 contentDescription = stringResource(id = R.string.password),
                 tint = if (isError) {
                     MaterialTheme.colorScheme.error
@@ -239,7 +262,7 @@ private fun PasswordSection(
         trailingIcon = {
             if (value.isNotEmpty()) {
                 Icon(
-                    imageVector = Icons.Default.Clear,
+                    imageVector = FistrIcons.clear,
                     contentDescription = "clear",
                     tint = if (isError) {
                         MaterialTheme.colorScheme.error
@@ -256,8 +279,37 @@ private fun PasswordSection(
                 Text(text = errorMessage)
             }
         },
+        colors = TextFieldDefaults.colors(
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceVariant,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            errorPlaceholderColor = MaterialTheme.colorScheme.error
+        ),
         modifier = Modifier.fillMaxWidth()
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun KeepMeSignedIn(
+    uiState: LoginUiState,
+    toogleKeepMeSignedIn: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        CompositionLocalProvider(
+            LocalMinimumInteractiveComponentEnforcement provides false
+        ) {
+            Checkbox(
+                checked = uiState.keepMeSignedIn,
+                onCheckedChange = { toogleKeepMeSignedIn(it) })
+        }
+        Spacer(modifier = Modifier.width(5.dp))
+        Text(text = stringResource(R.string.keep_me_signed_in))
+    }
 }
 
 @Composable
@@ -267,8 +319,10 @@ private fun PreviewLoginScreen() {
         navigateToHomeScreen = {},
         navigateToRegisterScreen = {},
         onUserIdentiferValueChange = {},
-        onLogInClick = { _, _ -> true },
+        onLogInClick = { _, _ -> },
         onPasswordValueChange = {},
+        toogleKeepMeSignedIn = {},
+        showSnackbar = {_ -> },
         uiState = LoginUiState(
             userIdentifier = "john-doe",
             password = "123456Abc."
