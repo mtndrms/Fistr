@@ -58,10 +58,7 @@ fun RegisterScreen(
                     .build()
             )
         },
-        onEmailValueChange = viewModel::onEmailValueChange,
-        onUsernameValueChange = viewModel::onUsernameValueChange,
-        onPasswordValueChange = viewModel::onPasswordValueChange,
-        onRegisterClick = viewModel::onRegisterClick,
+        onEvent = viewModel::onEvent,
         uiState = uiState
     )
 }
@@ -69,10 +66,7 @@ fun RegisterScreen(
 @Composable
 private fun Content(
     navigateToHomeScreen: () -> Unit,
-    onEmailValueChange: (String) -> Unit,
-    onUsernameValueChange: (String) -> Unit,
-    onPasswordValueChange: (String) -> Unit,
-    onRegisterClick: (String, String, String) -> Boolean,
+    onEvent: (RegisterEvent) -> Unit,
     uiState: RegisterUiState,
     modifier: Modifier = Modifier
 ) {
@@ -95,30 +89,25 @@ private fun Content(
                 isError = uiState.emailValidationMessage != null,
                 errorMessage = uiState.emailValidationMessage?.asString() ?: "",
                 value = uiState.email,
-                onValueChanged = {
-                    onEmailValueChange(it)
-                }
+                onValueChanged = { onEvent(RegisterEvent.EmailValueChange(it)) }
             )
             UsernameSection(
                 isError = uiState.usernameValidationMessage != null,
                 errorMessage = uiState.usernameValidationMessage?.asString() ?: "",
                 username = uiState.username,
-                onValueChanged = {
-                    onUsernameValueChange(it)
-                }
+                onValueChanged = { onEvent(RegisterEvent.UsernameValueChange(it)) }
             )
             PasswordSection(
                 isError = uiState.passwordValidationMessage != null,
                 errorMessage = uiState.passwordValidationMessage?.asString() ?: "",
                 password = uiState.password,
-                onValueChanged = {
-                    onPasswordValueChange(it)
-                }
+                onValueChanged = { onEvent(RegisterEvent.PasswordValueChange(it)) }
             )
             Spacer(modifier = Modifier.height(15.dp))
             Button(
                 onClick = {
-                    val isRegisterSuccessful = onRegisterClick(
+                    /*val isRegisterSuccessful = onEvent(RegisterEvent.RegisterClick)
+                    onRegisterClick(
                         uiState.email,
                         uiState.username,
                         uiState.password
@@ -126,7 +115,7 @@ private fun Content(
 
                     if (isRegisterSuccessful) {
                         navigateToHomeScreen()
-                    }
+                    }*/
                 },
                 content = { Text(text = stringResource(R.string.register)) },
                 modifier = Modifier.fillMaxWidth()
@@ -328,10 +317,7 @@ private fun PasswordSection(
 private fun PreviewRegisterScreen() {
     Content(
         navigateToHomeScreen = {},
-        onEmailValueChange = {},
-        onUsernameValueChange = {},
-        onPasswordValueChange = {},
-        onRegisterClick = { _, _, _ -> true },
+        onEvent = {},
         uiState = RegisterUiState(
             email = "john@doe.com",
             username = "john-doe",

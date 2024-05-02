@@ -49,12 +49,17 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun ChatScreen(navigator: DestinationsNavigator, viewModel: ChatViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Content(navigateToBack = navigator::popBackStack, uiState = uiState)
+    Content(
+        navigateToBack = navigator::popBackStack,
+        onEvent = viewModel::onEvent,
+        uiState = uiState
+    )
 }
 
 @Composable
 private fun Content(
     navigateToBack: () -> Unit,
+    onEvent: (ChatEvent) -> Unit,
     uiState: ChatUiState,
     modifier: Modifier = Modifier
 ) {
@@ -66,7 +71,11 @@ private fun Content(
             .padding(bottom = 10.dp)
             .then(modifier)
     ) {
-        ChatTopBar(fullName = uiState.fullName, navigateToBack = navigateToBack)
+        ChatTopBar(
+            fullName = uiState.fullName,
+            navigateToBack = navigateToBack,
+            onMoreClick = { }
+        )
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
@@ -87,12 +96,20 @@ private fun Content(
                 modifier = Modifier.weight(1f)
             )
         }
-        ComposeField(uiState = uiState.message, onMessageValueChange = { uiState.message = it })
+        ComposeField(
+            uiState = uiState.message,
+            onEmojiPanelOpenClick = { onEvent(ChatEvent.EmojiPanelOpen) },
+            onSendClick = { onEvent(ChatEvent.Send) },
+            onMessageValueChange = { onEvent(ChatEvent.MessageValueChange(it)) })
     }
 }
 
 @Composable
-private fun ChatTopBar(fullName: String, navigateToBack: () -> Unit) {
+private fun ChatTopBar(
+    fullName: String,
+    navigateToBack: () -> Unit,
+    onMoreClick: () -> Unit
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -135,13 +152,19 @@ private fun ChatTopBar(fullName: String, navigateToBack: () -> Unit) {
         Image(
             imageVector = FistrIcons.more,
             contentDescription = stringResource(R.string.more),
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
+            modifier = Modifier.clickable { onMoreClick() }
         )
     }
 }
 
 @Composable
-private fun ComposeField(uiState: String, onMessageValueChange: (String) -> Unit) {
+private fun ComposeField(
+    uiState: String,
+    onEmojiPanelOpenClick: () -> Unit,
+    onSendClick: () -> Unit,
+    onMessageValueChange: (String) -> Unit
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -154,9 +177,11 @@ private fun ComposeField(uiState: String, onMessageValueChange: (String) -> Unit
     ) {
         Image(
             painter = painterResource(id = FistrIcons.emoji),
-            contentDescription = stringResource(id = R.string.profile),
+            contentDescription = "emoji panel open",
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondaryContainer),
-            modifier = Modifier.clip(CircleShape)
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable { onEmojiPanelOpenClick() }
         )
         Spacer(modifier = Modifier.width(10.dp))
         OutlinedTextField(
@@ -176,9 +201,11 @@ private fun ComposeField(uiState: String, onMessageValueChange: (String) -> Unit
         Spacer(modifier = Modifier.width(10.dp))
         Image(
             imageVector = FistrIcons.send,
-            contentDescription = stringResource(id = R.string.profile),
+            contentDescription = "send",
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondaryContainer),
-            modifier = Modifier.clip(CircleShape)
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable { onSendClick() }
         )
     }
 }
@@ -224,6 +251,10 @@ private fun SuccessState(uiState: DataState.Success, modifier: Modifier = Modifi
 private fun PreviewChatScreen() {
     Content(
         navigateToBack = {},
-        uiState = ChatUiState(data = DataState.Success(FakeMessageData.getAllMessagesForChat(2)))
+        onEvent = {},
+        uiState = ChatUiState(
+            fullName = "John Doe",
+            data = DataState.Success(FakeMessageData.getAllMessagesForChat(2))
+        )
     )
 }

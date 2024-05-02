@@ -42,7 +42,7 @@ class LoginViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun toogleKeepMeSignedIn(value: Boolean) {
+    private fun toogleKeepMeSignedIn(value: Boolean) {
         viewModelScope.launch {
             settingsRepository.toggleKeepMeSignedIn(value)
         }
@@ -50,15 +50,15 @@ class LoginViewModel @Inject constructor(
         _uiState.update { it.copy(keepMeSignedIn = value) }
     }
 
-    fun onUserIdentifierValueChange(userIdentifier: String) {
+    private fun onUserIdentifierValueChange(userIdentifier: String) {
         _uiState.update { it.copy(userIdentifier = userIdentifier) }
     }
 
-    fun onPasswordValueChange(password: String) {
+    private fun onPasswordValueChange(password: String) {
         _uiState.update { it.copy(password = password) }
     }
 
-    fun onLogInClick(userIdentifier: String, password: String) {
+    private fun onLogInClick(userIdentifier: String, password: String) {
         when (
             val result = if (userIdentifier.contains("@")) {
                 userDataValidator.validateEmail(userIdentifier)
@@ -106,5 +106,28 @@ class LoginViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun onEvent(event: LoginEvent) {
+        when (event) {
+            is LoginEvent.UserIdentifierValueChange -> {
+                onUserIdentifierValueChange(event.userIdentifier)
+            }
+
+            is LoginEvent.PasswordValueChange -> {
+                onPasswordValueChange(event.password)
+            }
+
+            is LoginEvent.ToggleKeepMeSignedIn -> {
+                toogleKeepMeSignedIn(event.value)
+            }
+
+            is LoginEvent.LoginClick -> {
+                onLogInClick(
+                    userIdentifier = uiState.value.userIdentifier,
+                    password = uiState.value.password
+                )
+            }
+        }
     }
 }

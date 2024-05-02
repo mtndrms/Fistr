@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fistr.fistr.data.local.data_store.AppRepository
-import com.fistr.fistr.data.model.User
 import com.fistr.fistr.domain.Result
 import com.fistr.fistr.domain.asText
 import com.fistr.fistr.domain.use_case.GetAllMessagesForChatUseCase
@@ -27,9 +26,7 @@ class ChatViewModel @Inject constructor(
     private val appRepository: AppRepository,
     private val getAllMessagesForChatUseCase: GetAllMessagesForChatUseCase
 ) : ViewModel() {
-    private val _uiState: MutableStateFlow<ChatUiState> = MutableStateFlow(
-        ChatUiState(data = DataState.Loading)
-    )
+    private val _uiState = MutableStateFlow(ChatUiState(data = DataState.Loading))
     val uiState = _uiState.asStateFlow()
 
     private val navArgs: ChatScreenNavArgs = savedStateHandle.navArgs()
@@ -41,6 +38,9 @@ class ChatViewModel @Inject constructor(
             _uiState.update { it.copy(fullName = navArgs.fullName) }
         }
     }
+
+    private fun onMessageValueChange(message: String) =
+        _uiState.update { it.copy(message = message) }
 
     private fun getAllMessagesForChat(userID: Int, chatID: Int) {
         getAllMessagesForChatUseCase(userID, chatID).map { result ->
@@ -63,5 +63,21 @@ class ChatViewModel @Inject constructor(
                 )
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun onEvent(event: ChatEvent) {
+        when (event) {
+            is ChatEvent.EmojiPanelOpen -> {
+
+            }
+
+            is ChatEvent.MessageValueChange -> {
+                onMessageValueChange(event.message)
+            }
+
+            is ChatEvent.Send -> {
+
+            }
+        }
     }
 }

@@ -72,10 +72,7 @@ fun LoginScreen(
         navigateToRegisterScreen = {
             navigator.navigate(direction = RegisterScreenDestination())
         },
-        onUserIdentiferValueChange = viewModel::onUserIdentifierValueChange,
-        onLogInClick = viewModel::onLogInClick,
-        onPasswordValueChange = viewModel::onPasswordValueChange,
-        toogleKeepMeSignedIn = viewModel::toogleKeepMeSignedIn,
+        onEvent = viewModel::onEvent,
         showSnackbar = showSnackbar,
         uiState = uiState
     )
@@ -85,10 +82,7 @@ fun LoginScreen(
 private fun Content(
     navigateToHomeScreen: () -> Unit,
     navigateToRegisterScreen: () -> Unit,
-    onUserIdentiferValueChange: (String) -> Unit,
-    onLogInClick: (username: String, password: String) -> Unit,
-    onPasswordValueChange: (String) -> Unit,
-    toogleKeepMeSignedIn: (Boolean) -> Unit,
+    onEvent: (LoginEvent) -> Unit,
     showSnackbar: (SnackbarOptions) -> Unit,
     uiState: LoginUiState,
     modifier: Modifier = Modifier,
@@ -124,20 +118,23 @@ private fun Content(
                 value = uiState.userIdentifier,
                 isError = uiState.userIdentifierErrorMessage != null,
                 errorMessage = uiState.userIdentifierErrorMessage?.asString() ?: "",
-                onValueChange = onUserIdentiferValueChange
+                onValueChange = { onEvent(LoginEvent.UserIdentifierValueChange(it)) }
             )
             Spacer(modifier = Modifier.height(10.dp))
             PasswordSection(
                 value = uiState.password,
                 isError = uiState.passwordErrorMessage != null,
                 errorMessage = uiState.passwordErrorMessage?.asString() ?: "",
-                onValueChange = onPasswordValueChange
+                onValueChange = { onEvent(LoginEvent.PasswordValueChange(it)) }
             )
-            KeepMeSignedIn(toogleKeepMeSignedIn = toogleKeepMeSignedIn, uiState = uiState)
+            KeepMeSignedIn(
+                toogleKeepMeSignedIn = { onEvent(LoginEvent.ToggleKeepMeSignedIn(it)) },
+                uiState = uiState
+            )
             Spacer(modifier = Modifier.height(10.dp))
             Button(
                 content = { Text(text = stringResource(R.string.log_in)) },
-                onClick = { onLogInClick(uiState.userIdentifier, uiState.password) },
+                onClick = { onEvent(LoginEvent.LoginClick) },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -318,11 +315,8 @@ private fun PreviewLoginScreen() {
     Content(
         navigateToHomeScreen = {},
         navigateToRegisterScreen = {},
-        onUserIdentiferValueChange = {},
-        onLogInClick = { _, _ -> },
-        onPasswordValueChange = {},
-        toogleKeepMeSignedIn = {},
-        showSnackbar = {_ -> },
+        onEvent = {},
+        showSnackbar = { _ -> },
         uiState = LoginUiState(
             userIdentifier = "john-doe",
             password = "123456Abc."
