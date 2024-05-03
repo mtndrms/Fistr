@@ -18,9 +18,11 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavOptions
 import com.fistr.fistr.R
 import com.fistr.fistr.presentation.common.FistrIcons
+import com.fistr.fistr.presentation.common.SnackbarOptions
 import com.fistr.fistr.utils.avoidCreatingBackStackEntry
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
@@ -44,6 +47,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination<RootGraph>
 @Composable
 fun RegisterScreen(
+    showSnackbar: (SnackbarOptions) -> Unit,
     navigator: DestinationsNavigator,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
@@ -59,17 +63,31 @@ fun RegisterScreen(
             )
         },
         onEvent = viewModel::onEvent,
+        showSnackbar = showSnackbar,
         uiState = uiState
     )
 }
 
 @Composable
 private fun Content(
+    showSnackbar: (SnackbarOptions) -> Unit,
     navigateToHomeScreen: () -> Unit,
     onEvent: (RegisterEvent) -> Unit,
     uiState: RegisterUiState,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = uiState.registerStatus, key2 = uiState.registerErrorMessage) {
+        if (uiState.registerStatus && uiState.registerErrorMessage == null) {
+            navigateToHomeScreen()
+        } else {
+            uiState.registerErrorMessage?.let {
+                showSnackbar(SnackbarOptions(message = it.asString(context)))
+            }
+        }
+    }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -106,16 +124,7 @@ private fun Content(
             Spacer(modifier = Modifier.height(15.dp))
             Button(
                 onClick = {
-                    /*val isRegisterSuccessful = onEvent(RegisterEvent.RegisterClick)
-                    onRegisterClick(
-                        uiState.email,
-                        uiState.username,
-                        uiState.password
-                    )
-
-                    if (isRegisterSuccessful) {
-                        navigateToHomeScreen()
-                    }*/
+                    onEvent(RegisterEvent.RegisterClick)
                 },
                 content = { Text(text = stringResource(R.string.register)) },
                 modifier = Modifier.fillMaxWidth()
@@ -318,6 +327,7 @@ private fun PreviewRegisterScreen() {
     Content(
         navigateToHomeScreen = {},
         onEvent = {},
+        showSnackbar = {},
         uiState = RegisterUiState(
             email = "john@doe.com",
             username = "john-doe",

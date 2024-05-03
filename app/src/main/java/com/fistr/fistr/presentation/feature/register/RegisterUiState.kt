@@ -9,4 +9,6 @@ data class RegisterUiState(
     var emailValidationMessage: UiText? = null,
     var usernameValidationMessage: UiText? = null,
     var passwordValidationMessage: UiText? = null,
+    var registerStatus: Boolean = false,
+    var registerErrorMessage: UiText? = null,
 )

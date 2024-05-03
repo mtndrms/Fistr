@@ -17,19 +17,51 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.fistr.fistr.presentation.common.SnackbarOptions
 import com.fistr.fistr.presentation.common.bottom_bar.BottomNavigationBar
 import com.fistr.fistr.presentation.feature.login.LoginScreen
+import com.fistr.fistr.presentation.feature.register.RegisterScreen
 import com.fistr.fistr.presentation.theme.AppTheme
 import com.fistr.fistr.utils.SetSystemBarColors
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.generated.NavGraphs
 import com.ramcosta.composedestinations.generated.destinations.LoginScreenDestination
+import com.ramcosta.composedestinations.generated.destinations.RegisterScreenDestination
 import com.ramcosta.composedestinations.manualcomposablecalls.composable
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private fun showSnackbar(
+        scope: CoroutineScope,
+        state: SnackbarHostState,
+        options: SnackbarOptions
+    ) {
+        scope.launch {
+            if (options.actionLabel != null) {
+                val result = state.showSnackbar(
+                    message = options.message,
+                    actionLabel = options.actionLabel,
+                    duration = options.duration
+                )
+
+                when (result) {
+                    SnackbarResult.Dismissed -> {
+                        options.onDismissed()
+                    }
+
+                    SnackbarResult.ActionPerformed -> {
+                        options.onActionPerformed()
+                    }
+                }
+            } else {
+                state.showSnackbar(options.message)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -70,27 +102,24 @@ class MainActivity : ComponentActivity() {
                                 LoginScreen(
                                     navigator = destinationsNavigator,
                                     showSnackbar = { options ->
-                                        scope.launch {
-                                            if (options.actionLabel != null) {
-                                                val result = snackbarHostState.showSnackbar(
-                                                    message = options.message,
-                                                    actionLabel = options.actionLabel,
-                                                    duration = options.duration
-                                                )
+                                        showSnackbar(
+                                            scope = scope,
+                                            state = snackbarHostState,
+                                            options = options
+                                        )
+                                    }
+                                )
+                            }
 
-                                                when (result) {
-                                                    SnackbarResult.Dismissed -> {
-                                                        options.onDismissed()
-                                                    }
-
-                                                    SnackbarResult.ActionPerformed -> {
-                                                        options.onActionPerformed()
-                                                    }
-                                                }
-                                            } else {
-                                                snackbarHostState.showSnackbar(options.message)
-                                            }
-                                        }
+                            composable(RegisterScreenDestination) {
+                                RegisterScreen(
+                                    navigator = destinationsNavigator,
+                                    showSnackbar = { options ->
+                                        showSnackbar(
+                                            scope = scope,
+                                            state = snackbarHostState,
+                                            options = options
+                                        )
                                     }
                                 )
                             }

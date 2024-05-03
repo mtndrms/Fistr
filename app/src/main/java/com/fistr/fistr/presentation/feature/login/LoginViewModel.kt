@@ -37,17 +37,17 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun checkIfKeepMeSignedInOn() {
-        settingsRepository.isKeepMeSignedInOn.onEach { preference ->
-            _uiState.update { it.copy(keepMeSignedIn = preference) }
-        }.launchIn(viewModelScope)
+        viewModelScope.launch {
+            val isKeepMeSignedInOn = settingsRepository.isKeepMeSignedInOn()
+            _uiState.update { it.copy(keepMeSignedIn = isKeepMeSignedInOn) }
+        }
     }
 
     private fun toogleKeepMeSignedIn(value: Boolean) {
         viewModelScope.launch {
             settingsRepository.toggleKeepMeSignedIn(value)
+            _uiState.update { it.copy(keepMeSignedIn = value) }
         }
-
-        _uiState.update { it.copy(keepMeSignedIn = value) }
     }
 
     private fun onUserIdentifierValueChange(userIdentifier: String) {
@@ -58,7 +58,7 @@ class LoginViewModel @Inject constructor(
         _uiState.update { it.copy(password = password) }
     }
 
-    private fun onLogInClick(userIdentifier: String, password: String) {
+    private fun validateUserData(userIdentifier: String, password: String): Boolean {
         when (
             val result = if (userIdentifier.contains("@")) {
                 userDataValidator.validateEmail(userIdentifier)
@@ -75,13 +75,21 @@ class LoginViewModel @Inject constructor(
             is Result.Success -> _uiState.update { it.copy(passwordErrorMessage = null) }
         }
 
-        if (uiState.value.userIdentifierErrorMessage == null && uiState.value.passwordErrorMessage == null) {
+        return uiState.value.userIdentifierErrorMessage == null && uiState.value.passwordErrorMessage == null
+    }
+
+    private fun onLogInClick(userIdentifier: String, password: String) {
+        val isValid = validateUserData(userIdentifier = userIdentifier, password = password)
+        if (isValid) {
             authenticateUser(userIdentifier = userIdentifier, password = password)
         }
     }
 
     private fun authenticateUser(userIdentifier: String, password: String) {
-        authenticateUserUseCase(username = userIdentifier, password = password).map { result ->
+        authenticateUserUseCase(
+            username = userIdentifier,
+            password = password
+        ).map { result ->
             when (result) {
                 is Result.Error -> _uiState.update {
                     it.copy(

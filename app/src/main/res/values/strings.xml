@@ -35,4 +35,6 @@
     <string name="incorrect_login_credentials_please_try_again">Incorrect login credentials. Please try again.</string>
     <string name="more">more</string>
     <string name="message">Message</string>
+    <string name="duplicate_email">Email already in use.</string>
+    <string name="duplicate_username">Username already taken.</string>
 </resources>
