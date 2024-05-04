@@ -53,15 +53,7 @@ class ChatViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = DataState.Loading
         ).onEach { newValue ->
-            _uiState.update {
-                it.copy(
-                    data = when (newValue) {
-                        is DataState.Loading -> newValue
-                        is DataState.LoadFailed -> newValue
-                        is DataState.Success -> newValue
-                    }
-                )
-            }
+            _uiState.update { it.copy(data = newValue) }
         }.launchIn(viewModelScope)
     }
 

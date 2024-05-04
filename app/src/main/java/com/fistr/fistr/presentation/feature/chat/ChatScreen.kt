@@ -18,10 +18,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -104,58 +108,59 @@ private fun Content(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ChatTopBar(
     fullName: String,
     navigateToBack: () -> Unit,
     onMoreClick: () -> Unit
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(64.dp)
-            .background(MaterialTheme.colorScheme.surfaceContainer)
-            .padding(horizontal = 10.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .clip(RoundedCornerShape(20.dp))
-                .clickable { navigateToBack() }
-        ) {
-            Image(
+    TopAppBar(
+        title = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable { navigateToBack() }
+            ) {
+                Image(
+                    imageVector = FistrIcons.person,
+                    contentDescription = "profile picture",
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceContainer),
+                    modifier = Modifier
+                        .background(
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            shape = CircleShape
+                        )
+                        .padding(5.dp)
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(text = fullName)
+            }
+        },
+        navigationIcon = {
+            Icon(
                 imageVector = FistrIcons.back,
-                contentDescription = "go back",
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
-            )
-            Spacer(modifier = Modifier.width(3.dp))
-            Image(
-                imageVector = FistrIcons.person,
-                contentDescription = stringResource(id = R.string.profile),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceContainer),
+                contentDescription = stringResource(id = R.string.back),
                 modifier = Modifier
-                    .background(
-                        color = MaterialTheme.colorScheme.onSecondaryContainer,
-                        shape = CircleShape
-                    )
-                    .padding(5.dp)
+                    .padding(start = 16.dp)
+                    .clip(CircleShape)
+                    .clickable { navigateToBack() }
             )
-        }
-        Spacer(modifier = Modifier.width(10.dp))
-        Text(
-            text = fullName,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.weight(1f)
-        )
-        Spacer(modifier = Modifier.width(10.dp))
-        Image(
-            imageVector = FistrIcons.more,
-            contentDescription = stringResource(R.string.more),
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
-            modifier = Modifier.clickable { onMoreClick() }
-        )
-    }
+        },
+        actions = {
+            Icon(
+                imageVector = FistrIcons.more,
+                contentDescription = stringResource(id = R.string.more),
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .clip(CircleShape)
+                    .clickable { }
+            )
+        },
+        colors = TopAppBarDefaults.topAppBarColors().copy(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
+        ),
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 @Composable

@@ -1,6 +1,7 @@
 package com.fistr.fistr.domain.use_case
 
 import com.fistr.fistr.data.mock_data.FakeUserData
+import com.fistr.fistr.data.model.MartialArt
 import com.fistr.fistr.data.model.User
 import com.fistr.fistr.domain.AuthenticatonError
 import com.fistr.fistr.domain.Result
@@ -28,7 +29,13 @@ class AuthenticateUserUseCase @Inject constructor() {
                                 User(
                                     id = id,
                                     username = username,
-                                    fullName = fullName
+                                    fullName = fullName,
+                                    expertises = expertises.map {
+                                        MartialArt(
+                                            id = it.id,
+                                            name = it.martialArtName
+                                        )
+                                    }
                                 )
                             )
                         )

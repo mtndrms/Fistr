@@ -13,6 +13,8 @@ import com.ramcosta.composedestinations.generated.destinations.BrowseScreenDesti
 import com.ramcosta.composedestinations.generated.destinations.ChatScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.ChatsScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination
+import com.ramcosta.composedestinations.generated.destinations.ProfileScreenDestination
+import com.ramcosta.composedestinations.generated.destinations.SettingsScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.SplashScreenDestination
 import kotlinx.coroutines.CoroutineScope
 
@@ -37,16 +39,37 @@ fun NavDestination?.shouldShowBottomNavigationOnThisDestinations() =
 @Composable
 fun NavDestination?.systemBarColorsAccordingToCurrentlyDisplayingScreen(): Pair<Color, Color> {
     return when (this?.route) {
-        ChatScreenDestination.route -> {
+        SplashScreenDestination.route -> {
+            Pair(
+                MaterialTheme.colorScheme.background,
+                MaterialTheme.colorScheme.background
+            )
+        }
+
+        HomeScreenDestination.route -> {
+            Pair(
+                MaterialTheme.colorScheme.surfaceContainer,
+                MaterialTheme.colorScheme.secondaryContainer
+            )
+        }
+
+        ProfileScreenDestination.route -> {
             Pair(
                 MaterialTheme.colorScheme.surfaceContainer,
                 MaterialTheme.colorScheme.background
             )
         }
 
-        SplashScreenDestination.route -> {
+        SettingsScreenDestination.route -> {
             Pair(
-                MaterialTheme.colorScheme.background,
+                MaterialTheme.colorScheme.surfaceContainer,
+                MaterialTheme.colorScheme.background
+            )
+        }
+
+        ChatScreenDestination.route -> {
+            Pair(
+                MaterialTheme.colorScheme.surfaceContainer,
                 MaterialTheme.colorScheme.background
             )
         }

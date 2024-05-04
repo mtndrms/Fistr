@@ -33,8 +33,22 @@
     <string name="please_provide_a_valid_email_address">Please provide a valid email address.</string>
     <string name="keep_me_signed_in">Keep me signed in</string>
     <string name="incorrect_login_credentials_please_try_again">Incorrect login credentials. Please try again.</string>
-    <string name="more">more</string>
     <string name="message">Message</string>
     <string name="duplicate_email">Email already in use.</string>
     <string name="duplicate_username">Username already taken.</string>
+    <string name="back">Navigate back</string>
+    <string name="more">More</string>
+    <string name="profile_photo">profile photo</string>
+    <string name="wins">Wins</string>
+    <string name="statistics">Statistics</string>
+    <string name="losses">Losses</string>
+    <string name="about">About</string>
+    <string name="expertises">Expertises</string>
+    <string name="height">Height</string>
+    <string name="weight">Weight</string>
+    <string name="height_cm">%1$scm</string>
+    <string name="weight_kg">%1$skg</string>
+    <string name="weight_class">Weight Class</string>
+    <string name="stance">Stance</string>
+    <string name="gallery">Gallery</string>
 </resources>

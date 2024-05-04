@@ -3,6 +3,7 @@ package com.fistr.fistr.data.mock_data
 import com.fistr.fistr.data.model.Chat
 import com.fistr.fistr.data.model.Message
 
+//This class fakes a remote database
 object FakeChatData {
     private val chat1 = Chat(
         id = 1,

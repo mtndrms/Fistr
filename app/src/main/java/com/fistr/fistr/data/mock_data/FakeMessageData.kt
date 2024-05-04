@@ -2,6 +2,7 @@ package com.fistr.fistr.data.mock_data
 
 import com.fistr.fistr.data.model.Message
 
+//This class fakes a remote database
 object FakeMessageData {
     private val messages = listOf(
         Message(
