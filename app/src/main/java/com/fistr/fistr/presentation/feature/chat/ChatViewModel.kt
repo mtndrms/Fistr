@@ -35,7 +35,7 @@ class ChatViewModel @Inject constructor(
         viewModelScope.launch {
             val userID = appRepository.getLoggedInUserID()
             getAllMessagesForChat(userID = userID, chatID = navArgs.chatID)
-            _uiState.update { it.copy(fullName = navArgs.fullName) }
+            _uiState.update { it.copy(userID = navArgs.userID, fullName = navArgs.fullName) }
         }
     }
 

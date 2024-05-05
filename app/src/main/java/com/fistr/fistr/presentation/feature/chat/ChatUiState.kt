@@ -4,6 +4,7 @@ import com.fistr.fistr.data.model.Message
 import com.fistr.fistr.presentation.common.UiText
 
 data class ChatUiState(
+    var userID: Int = -1,
     var fullName: String = "",
     var message: String = "",
     val data: DataState,

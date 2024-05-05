@@ -67,7 +67,7 @@ import com.ramcosta.composedestinations.generated.destinations.SettingsScreenDes
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.delay
 
-@Destination<RootGraph>
+@Destination<RootGraph>(navArgs = ProfileScreenNavArgs::class)
 @Composable
 fun ProfileScreen(navigator: DestinationsNavigator, viewModel: ProfileViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -92,16 +92,19 @@ private fun Content(
             .background(MaterialTheme.colorScheme.background)
             .then(modifier)
     ) {
-        ProfileTopBar(
-            username = uiState.localUser?.username ?: "",
-            fullName = uiState.localUser?.fullName ?: "",
-            navigateBack = navigateBack,
-            navigateToSettingsScreen = navigateToSettingsScreen
-        )
         when (uiState.state) {
             is DataState.Loading -> LoadingState()
             is DataState.LoadFailed -> LoadFailedState(uiState = uiState.state)
-            is DataState.Success -> SuccessState(uiState = uiState.state)
+            is DataState.Success -> {
+                ProfileTopBar(
+                    isUsersOwnProfile = uiState.isUsersOwnProfile,
+                    username = uiState.state.user.username,
+                    fullName = uiState.state.user.fullName,
+                    navigateBack = navigateBack,
+                    navigateToSettingsScreen = navigateToSettingsScreen
+                )
+                SuccessState(uiState = uiState.state)
+            }
         }
     }
 }
@@ -109,6 +112,7 @@ private fun Content(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProfileTopBar(
+    isUsersOwnProfile: Boolean,
     username: String,
     fullName: String,
     navigateBack: () -> Unit,
@@ -138,14 +142,16 @@ private fun ProfileTopBar(
                 )
             },
             actions = {
-                Icon(
-                    imageVector = FistrIcons.settings,
-                    contentDescription = stringResource(id = R.string.settings),
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .clip(CircleShape)
-                        .clickable { navigateToSettingsScreen() }
-                )
+                if (isUsersOwnProfile) {
+                    Icon(
+                        imageVector = FistrIcons.settings,
+                        contentDescription = stringResource(id = R.string.settings),
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .clip(CircleShape)
+                            .clickable { navigateToSettingsScreen() }
+                    )
+                }
             },
             colors = TopAppBarDefaults.topAppBarColors().copy(
                 containerColor = MaterialTheme.colorScheme.surfaceContainer
@@ -506,8 +512,8 @@ private fun PreviewProfileScreen() {
         navigateToSettingsScreen = {},
         navigateBack = {},
         uiState = ProfileUiState(
-            localUser = FakeUserData.getUserByID(3),
-            state = DataState.Success(FakeUserData.getUserByID(3))
+            isUsersOwnProfile = true,
+            state = DataState.Success(FakeUserData.getUserByID(1))
         )
     )
 }

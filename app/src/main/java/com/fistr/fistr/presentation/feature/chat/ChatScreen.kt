@@ -44,9 +44,12 @@ import com.fistr.fistr.R
 import com.fistr.fistr.data.mock_data.FakeMessageData
 import com.fistr.fistr.presentation.common.FistrIcons
 import com.fistr.fistr.presentation.feature.chat.components.ItemMessage
+import com.fistr.fistr.presentation.feature.profile.ProfileScreenNavArgs
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
+import com.ramcosta.composedestinations.generated.destinations.ProfileScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.spec.Direction
 
 @Destination<RootGraph>(navArgs = ChatScreenNavArgs::class)
 @Composable
@@ -54,6 +57,7 @@ fun ChatScreen(navigator: DestinationsNavigator, viewModel: ChatViewModel = hilt
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Content(
+        navigateToProfile = { navigator.navigate(it) },
         navigateToBack = navigator::popBackStack,
         onEvent = viewModel::onEvent,
         uiState = uiState
@@ -62,6 +66,7 @@ fun ChatScreen(navigator: DestinationsNavigator, viewModel: ChatViewModel = hilt
 
 @Composable
 private fun Content(
+    navigateToProfile: (Direction) -> Unit,
     navigateToBack: () -> Unit,
     onEvent: (ChatEvent) -> Unit,
     uiState: ChatUiState,
@@ -76,7 +81,9 @@ private fun Content(
             .then(modifier)
     ) {
         ChatTopBar(
+            userID = uiState.userID,
             fullName = uiState.fullName,
+            navigateToProfile = navigateToProfile,
             navigateToBack = navigateToBack,
             onMoreClick = { }
         )
@@ -111,13 +118,22 @@ private fun Content(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ChatTopBar(
+    userID: Int,
     fullName: String,
+    navigateToProfile: (Direction) -> Unit,
     navigateToBack: () -> Unit,
     onMoreClick: () -> Unit
 ) {
     TopAppBar(
         title = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable {
+                    navigateToProfile(
+                        ProfileScreenDestination(ProfileScreenNavArgs(userID = userID))
+                    )
+                }
+            ) {
                 Image(
                     imageVector = FistrIcons.person,
                     contentDescription = "profile picture",
@@ -252,6 +268,7 @@ private fun SuccessState(uiState: DataState.Success, modifier: Modifier = Modifi
 @Composable
 private fun PreviewChatScreen() {
     Content(
+        navigateToProfile = {},
         navigateToBack = {},
         onEvent = {},
         uiState = ChatUiState(

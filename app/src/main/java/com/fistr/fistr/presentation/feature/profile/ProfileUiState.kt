@@ -4,7 +4,7 @@ import com.fistr.fistr.data.model.User
 import com.fistr.fistr.presentation.common.UiText
 
 data class ProfileUiState(
-    val localUser: User? = null,
+    var isUsersOwnProfile: Boolean = false,
     val state: DataState = DataState.Loading
 )
 

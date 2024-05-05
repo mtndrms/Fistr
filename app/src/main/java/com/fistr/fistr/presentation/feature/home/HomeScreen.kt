@@ -24,11 +24,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fistr.fistr.R
+import com.fistr.fistr.data.model.User
 import com.fistr.fistr.presentation.common.FistrIcons
+import com.fistr.fistr.presentation.feature.profile.ProfileScreenNavArgs
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.generated.destinations.ProfileScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.spec.Direction
 
 @Destination<RootGraph>
 @Composable
@@ -36,14 +39,14 @@ fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hilt
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Content(
-        navigateToProfileScreen = { navigator.navigate(ProfileScreenDestination) },
+        navigateToProfileScreen = { navigator.navigate(it) },
         uiState = uiState
     )
 }
 
 @Composable
 private fun Content(
-    navigateToProfileScreen: () -> Unit,
+    navigateToProfileScreen: (Direction) -> Unit,
     uiState: HomeUiState,
     modifier: Modifier = Modifier
 ) {
@@ -54,6 +57,7 @@ private fun Content(
             .background(MaterialTheme.colorScheme.background)
     ) {
         HomeTopBar(
+            user = uiState.user,
             navigateToProfileScreen = navigateToProfileScreen
         )
     }
@@ -61,7 +65,10 @@ private fun Content(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HomeTopBar(navigateToProfileScreen: () -> Unit) {
+private fun HomeTopBar(
+    user: User?,
+    navigateToProfileScreen: (Direction) -> Unit
+) {
     TopAppBar(
         title = {
             Text(text = stringResource(id = R.string.app_name))
@@ -73,7 +80,13 @@ private fun HomeTopBar(navigateToProfileScreen: () -> Unit) {
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .clip(CircleShape)
-                    .clickable { navigateToProfileScreen() }
+                    .clickable {
+                        navigateToProfileScreen(
+                            ProfileScreenDestination(
+                                ProfileScreenNavArgs(userID = user?.id ?: -1)
+                            )
+                        )
+                    }
             )
         },
         colors = TopAppBarDefaults.topAppBarColors().copy(

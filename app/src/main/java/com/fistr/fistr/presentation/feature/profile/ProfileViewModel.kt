@@ -1,11 +1,13 @@
 package com.fistr.fistr.presentation.feature.profile
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fistr.fistr.data.local.data_store.AppRepository
 import com.fistr.fistr.domain.Result
 import com.fistr.fistr.domain.asText
 import com.fistr.fistr.domain.use_case.GetUserUseCase
+import com.ramcosta.composedestinations.generated.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,17 +22,25 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val appRepository: AppRepository,
     private val getUserUseCase: GetUserUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState = _uiState.asStateFlow()
 
+    private val navArgs: ProfileScreenNavArgs = savedStateHandle.navArgs()
+
     init {
         viewModelScope.launch {
-            val localUser = appRepository.getLoggedInUser()
-            getUserByID(localUser.id)
-            _uiState.update { it.copy(localUser = localUser) }
+            val loggedInUserID = appRepository.getLoggedInUserID()
+            _uiState.update {
+                it.copy(
+                    isUsersOwnProfile = loggedInUserID == navArgs.userID
+                )
+            }
+
+            getUserByID(navArgs.userID)
         }
     }
 

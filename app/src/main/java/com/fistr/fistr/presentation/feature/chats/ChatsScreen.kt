@@ -16,9 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.fistr.fistr.data.mock_data.FakeChatData
 import com.fistr.fistr.presentation.feature.chat.ChatScreenNavArgs
 import com.fistr.fistr.presentation.feature.chats.components.ItemChat
-import com.fistr.fistr.data.mock_data.FakeChatData
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.generated.destinations.ChatScreenDestination
@@ -96,14 +96,15 @@ private fun SuccessState(
                 }
             ) { chat ->
                 ItemChat(
-                    username = chat.participants[1].fullName,
+                    username = chat.participants.last().fullName,
                     messagePreview = chat.preview.content,
                     modifier = Modifier.clickable {
                         navigateToChatScreen(
                             ChatScreenDestination(
                                 ChatScreenNavArgs(
-                                    chat.id,
-                                    chat.participants.last().fullName
+                                    chatID = chat.id,
+                                    userID = chat.participants.last().id,
+                                    fullName = chat.participants.last().fullName
                                 )
                             )
                         )
