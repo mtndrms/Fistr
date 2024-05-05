@@ -13,7 +13,9 @@ import com.ramcosta.composedestinations.generated.destinations.BrowseScreenDesti
 import com.ramcosta.composedestinations.generated.destinations.ChatScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.ChatsScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination
+import com.ramcosta.composedestinations.generated.destinations.LoginScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.ProfileScreenDestination
+import com.ramcosta.composedestinations.generated.destinations.RegisterScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.SettingsScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.SplashScreenDestination
 import kotlinx.coroutines.CoroutineScope
@@ -30,8 +32,8 @@ fun rememberAppState(
 
 fun NavDestination?.shouldShowBottomNavigationOnThisDestinations() =
     when (this?.route) {
-        HomeScreenDestination.route -> true
-        BrowseScreenDestination.route -> true
+        HomeScreenDestination.route,
+        BrowseScreenDestination.route,
         ChatsScreenDestination.route -> true
         else -> false
     }
@@ -39,7 +41,9 @@ fun NavDestination?.shouldShowBottomNavigationOnThisDestinations() =
 @Composable
 fun NavDestination?.systemBarColorsAccordingToCurrentlyDisplayingScreen(): Pair<Color, Color> {
     return when (this?.route) {
-        SplashScreenDestination.route -> {
+        SplashScreenDestination.route,
+        RegisterScreenDestination.route,
+        LoginScreenDestination.route -> {
             Pair(
                 MaterialTheme.colorScheme.background,
                 MaterialTheme.colorScheme.background
@@ -53,20 +57,8 @@ fun NavDestination?.systemBarColorsAccordingToCurrentlyDisplayingScreen(): Pair<
             )
         }
 
-        ProfileScreenDestination.route -> {
-            Pair(
-                MaterialTheme.colorScheme.surfaceContainer,
-                MaterialTheme.colorScheme.background
-            )
-        }
-
-        SettingsScreenDestination.route -> {
-            Pair(
-                MaterialTheme.colorScheme.surfaceContainer,
-                MaterialTheme.colorScheme.background
-            )
-        }
-
+        ProfileScreenDestination.route,
+        SettingsScreenDestination.route,
         ChatScreenDestination.route -> {
             Pair(
                 MaterialTheme.colorScheme.surfaceContainer,

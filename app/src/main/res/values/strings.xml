@@ -38,7 +38,7 @@
     <string name="duplicate_username">Username already taken.</string>
     <string name="back">Navigate back</string>
     <string name="more">More</string>
-    <string name="profile_photo">profile photo</string>
+    <string name="profile_photo">Profile photo</string>
     <string name="wins">Wins</string>
     <string name="statistics">Statistics</string>
     <string name="losses">Losses</string>
@@ -51,4 +51,15 @@
     <string name="weight_class">Weight Class</string>
     <string name="stance">Stance</string>
     <string name="gallery">Gallery</string>
+    <string name="theme">Theme</string>
+    <string name="language">Language</string>
+    <string name="system_default">System default</string>
+    <string name="english">English</string>
+    <string name="turkish">Türkçe</string>
+    <string name="dark">Dark</string>
+    <string name="light">Light</string>
+    <string name="german">Deutsch</string>
+    <string name="russian">Русский</string>
+    <string name="navigate">Navigate</string>
+    <string name="logout">Log out</string>
 </resources>

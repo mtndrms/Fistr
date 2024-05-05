@@ -1,6 +1,6 @@
 package com.fistr.fistr.data.mock_data
 
-enum class WeightClass {
+enum class WeightClassType {
     FLYWEIGHT,
     BANTAMWEIGHT,
     FEATHERWEIGHT,

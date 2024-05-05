@@ -2,6 +2,7 @@ package com.fistr.fistr.presentation.common
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
@@ -31,6 +32,7 @@ object FistrIcons {
     val send: ImageVector = Icons.AutoMirrored.Rounded.Send
     val back: ImageVector = Icons.AutoMirrored.Rounded.ArrowBack
     val settings: ImageVector = Icons.Rounded.Settings
+    val rightArrow: ImageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight
 
     // Drawables
     val username: Int = R.drawable.ic_tag

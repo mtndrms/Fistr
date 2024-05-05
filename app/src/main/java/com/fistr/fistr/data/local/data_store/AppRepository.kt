@@ -33,4 +33,10 @@ class AppRepository @Inject constructor(@Named("app") private val appDataStore: 
         val preferences = appDataStore.data.first()
         return preferences[LOGGED_IN_USER_ID] ?: -1
     }
+
+    suspend fun clear() {
+        appDataStore.edit {
+            it.clear()
+        }
+    }
 }

@@ -57,8 +57,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fistr.fistr.R
 import com.fistr.fistr.data.mock_data.FakeUserData
-import com.fistr.fistr.data.mock_data.WeightClass
-import com.fistr.fistr.data.mock_data.model.Stance
+import com.fistr.fistr.data.mock_data.StanceType
+import com.fistr.fistr.data.mock_data.WeightClassType
 import com.fistr.fistr.data.model.MartialArt
 import com.fistr.fistr.presentation.common.FistrIcons
 import com.ramcosta.composedestinations.annotation.Destination
@@ -215,10 +215,11 @@ private fun SuccessState(uiState: DataState.Success, modifier: Modifier = Modifi
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
             .verticalScroll(state = rememberScrollState())
             .then(modifier)
     ) {
+        Spacer(modifier = Modifier.height(16.dp))
         Overview(
             height = uiState.user.height,
             weight = uiState.user.weight,
@@ -234,6 +235,7 @@ private fun SuccessState(uiState: DataState.Success, modifier: Modifier = Modifi
         Expertises(expertises = uiState.user.expertises)
         Spacer(modifier = Modifier.height(20.dp))
         Gallery()
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
@@ -241,9 +243,9 @@ private fun SuccessState(uiState: DataState.Success, modifier: Modifier = Modifi
 private fun Overview(
     height: Int,
     weight: Int,
-    weightClass: WeightClass,
+    weightClass: WeightClassType,
     age: Int,
-    stance: Stance,
+    stance: StanceType,
     modifier: Modifier = Modifier
 ) {
     Column(

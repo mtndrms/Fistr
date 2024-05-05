@@ -1,6 +1,5 @@
 package com.fistr.fistr.data.mock_data
 
-import com.fistr.fistr.data.mock_data.model.Stance
 import com.fistr.fistr.data.mock_data.model.UserEntity
 import com.fistr.fistr.data.model.MartialArt
 import com.fistr.fistr.data.model.User
@@ -16,17 +15,17 @@ object FakeUserData {
         username = "test1",
         password = "123456Abc.",
         fullName = "Test User",
-        weightClass = WeightClass.MIDDLEWEIGHT,
+        weightClass = WeightClassType.MIDDLEWEIGHT,
         age = 28,
         height = 174,
         weight = 70,
         wins = 15,
         losses = 3,
-        stance = Stance.SWITCH,
+        stance = StanceType.SWITCH,
         expertises = listOf(
-            FakeMartialArtData.MartialArt.MMA,
-            FakeMartialArtData.MartialArt.JUDO,
-            FakeMartialArtData.MartialArt.AIKIDO
+            MartialArtType.MMA,
+            MartialArtType.JUDO,
+            MartialArtType.AIKIDO
         )
     )
     private val user2 = UserEntity(
@@ -35,18 +34,18 @@ object FakeUserData {
         username = "test2",
         password = "223456Abc.",
         fullName = "Test User 2",
-        weightClass = WeightClass.WELTERWEIGHT,
+        weightClass = WeightClassType.WELTERWEIGHT,
         age = 24,
         height = 172,
         weight = 72,
         wins = 10,
         losses = 2,
-        stance = Stance.ORTHODOX,
+        stance = StanceType.ORTHODOX,
         expertises = listOf(
-            FakeMartialArtData.MartialArt.KRAV_MAGA,
-            FakeMartialArtData.MartialArt.BOXING,
-            FakeMartialArtData.MartialArt.MUAY_THAI,
-            FakeMartialArtData.MartialArt.TAEKWONDO
+            MartialArtType.KRAV_MAGA,
+            MartialArtType.BOXING,
+            MartialArtType.MUAY_THAI,
+            MartialArtType.TAEKWONDO
         )
     )
     private val user3 = UserEntity(
@@ -55,22 +54,22 @@ object FakeUserData {
         username = "test3",
         password = "323456Abc.",
         fullName = "Test User 3",
-        weightClass = WeightClass.LIGHTWEIGHT,
+        weightClass = WeightClassType.LIGHTWEIGHT,
         age = 31,
         height = 176,
         weight = 68,
         wins = 20,
         losses = 5,
-        stance = Stance.ORTHODOX,
+        stance = StanceType.ORTHODOX,
         expertises = listOf(
-            FakeMartialArtData.MartialArt.JIU_JITSU,
-            FakeMartialArtData.MartialArt.KRAV_MAGA,
-            FakeMartialArtData.MartialArt.KUNG_FU,
-            FakeMartialArtData.MartialArt.KARATE,
-            FakeMartialArtData.MartialArt.BOXING,
-            FakeMartialArtData.MartialArt.MUAY_THAI,
-            FakeMartialArtData.MartialArt.AIKIDO,
-            FakeMartialArtData.MartialArt.MMA
+            MartialArtType.JIU_JITSU,
+            MartialArtType.KRAV_MAGA,
+            MartialArtType.KUNG_FU,
+            MartialArtType.KARATE,
+            MartialArtType.BOXING,
+            MartialArtType.MUAY_THAI,
+            MartialArtType.AIKIDO,
+            MartialArtType.MMA
         )
     )
     private val user4 = UserEntity(
@@ -79,15 +78,15 @@ object FakeUserData {
         username = "test4",
         password = "423456Abc.",
         fullName = "Test User 4",
-        weightClass = WeightClass.FEATHERWEIGHT,
+        weightClass = WeightClassType.FEATHERWEIGHT,
         age = 26,
         height = 175,
         weight = 72,
         wins = 8,
         losses = 1,
-        stance = Stance.SOUTHPAW,
+        stance = StanceType.SOUTHPAW,
         expertises = listOf(
-            FakeMartialArtData.MartialArt.BOXING
+            MartialArtType.BOXING
         )
     )
 
@@ -140,13 +139,13 @@ object FakeUserData {
             username = username,
             password = password,
             fullName = fullName,
-            weightClass = WeightClass.MIDDLEWEIGHT,
+            weightClass = WeightClassType.MIDDLEWEIGHT,
             age = 0,
             height = 0,
             weight = 0,
             wins = 0,
             losses = 0,
-            stance = Stance.SWITCH,
+            stance = StanceType.SWITCH,
             expertises = emptyList()
         )
 

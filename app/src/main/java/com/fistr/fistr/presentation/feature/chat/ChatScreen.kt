@@ -117,10 +117,7 @@ private fun ChatTopBar(
 ) {
     TopAppBar(
         title = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable { navigateToBack() }
-            ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
                     imageVector = FistrIcons.person,
                     contentDescription = "profile picture",
@@ -153,7 +150,7 @@ private fun ChatTopBar(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .clip(CircleShape)
-                    .clickable { }
+                    .clickable { onMoreClick() }
             )
         },
         colors = TopAppBarDefaults.topAppBarColors().copy(
