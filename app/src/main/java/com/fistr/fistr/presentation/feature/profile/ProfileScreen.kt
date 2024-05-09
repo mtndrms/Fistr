@@ -9,8 +9,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,8 +28,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SuggestionChip
-import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -59,7 +55,7 @@ import com.fistr.fistr.R
 import com.fistr.fistr.data.mock_data.FakeUserData
 import com.fistr.fistr.data.mock_data.StanceType
 import com.fistr.fistr.data.mock_data.WeightClassType
-import com.fistr.fistr.data.model.MartialArt
+import com.fistr.fistr.presentation.common.ExpertisesChips
 import com.fistr.fistr.presentation.common.FistrIcons
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
@@ -238,7 +234,7 @@ private fun SuccessState(uiState: DataState.Success, modifier: Modifier = Modifi
         Spacer(modifier = Modifier.height(20.dp))
         About(fullName = uiState.user.fullName)
         Spacer(modifier = Modifier.height(20.dp))
-        Expertises(expertises = uiState.user.expertises)
+        ExpertisesChips(showTitle = true, expertises = uiState.user.expertises)
         Spacer(modifier = Modifier.height(20.dp))
         Gallery()
         Spacer(modifier = Modifier.height(16.dp))
@@ -436,38 +432,6 @@ private fun About(fullName: String, modifier: Modifier = Modifier) {
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodyMedium
         )
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun Expertises(expertises: List<MartialArt>, modifier: Modifier = Modifier) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .then(modifier)
-    ) {
-        Text(
-            text = stringResource(R.string.expertises),
-            style = MaterialTheme.typography.titleMedium
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        FlowRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-        ) {
-            expertises.forEach { martialArt ->
-                SuggestionChip(
-                    onClick = { },
-                    label = { Text(martialArt.name) },
-                    colors = SuggestionChipDefaults.suggestionChipColors().copy(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainer
-                    ),
-                    modifier = Modifier.padding(end = 5.dp)
-                )
-            }
-        }
     }
 }
 

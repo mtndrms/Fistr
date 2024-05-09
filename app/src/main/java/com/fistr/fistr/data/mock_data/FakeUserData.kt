@@ -92,7 +92,7 @@ object FakeUserData {
 
     private val users = mutableListOf(user1, user2, user3, user4)
 
-    fun getAllUsers() = users
+    fun getAllUsers() = users.toList()
     fun getUserByID(id: Int): User {
         return users[id - 1].run {
             User(

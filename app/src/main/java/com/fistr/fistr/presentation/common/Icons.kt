@@ -7,12 +7,15 @@ import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.MailOutline
+import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Email
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.fistr.fistr.R
@@ -33,6 +36,9 @@ object FistrIcons {
     val back: ImageVector = Icons.AutoMirrored.Rounded.ArrowBack
     val settings: ImageVector = Icons.Rounded.Settings
     val rightArrow: ImageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight
+    val cancel: ImageVector = Icons.Rounded.Close
+    val done: ImageVector = Icons.Rounded.Check
+    val refresh: ImageVector = Icons.Rounded.Refresh
 
     // Drawables
     val username: Int = R.drawable.ic_tag
