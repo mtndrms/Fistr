@@ -29,10 +29,12 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fistr.fistr.data.mapper.toUserList
 import com.fistr.fistr.data.mock_data.FakeUserData
@@ -49,7 +51,7 @@ import com.ramcosta.composedestinations.spec.Direction
 @Destination<RootGraph>
 @Composable
 fun BrowseScreen(navigator: DestinationsNavigator, viewModel: BrowseViewModel = hiltViewModel()) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner = LocalLifecycleOwner.current)
 
     Content(
         onEvent = viewModel::onEvent,
@@ -178,7 +180,7 @@ private fun Controls(onEvent: (BrowseEvent) -> Unit, user: User) {
                 )
                 .padding(8.dp)
                 .clickable {
-                    onEvent(BrowseEvent.SwipedLeft(user = user))
+                    onEvent(BrowseEvent.Refresh)
                 }
         )
         Spacer(modifier = Modifier.width(40.dp))

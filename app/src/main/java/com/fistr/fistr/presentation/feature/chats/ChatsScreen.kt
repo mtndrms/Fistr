@@ -13,8 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.hilt.navigation.compose.hiltViewModel
+
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fistr.fistr.data.mock_data.FakeChatData
 import com.fistr.fistr.presentation.feature.chat.ChatScreenNavArgs
@@ -31,7 +33,7 @@ fun ChatsScreen(
     navigator: DestinationsNavigator,
     viewModel: ChatsViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner = LocalLifecycleOwner.current)
 
     Content(
         navigateToChatScreen = navigator::navigate,

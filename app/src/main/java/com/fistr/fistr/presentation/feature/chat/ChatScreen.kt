@@ -34,11 +34,13 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fistr.fistr.R
 import com.fistr.fistr.data.mock_data.FakeMessageData
@@ -54,7 +56,7 @@ import com.ramcosta.composedestinations.spec.Direction
 @Destination<RootGraph>(navArgs = ChatScreenNavArgs::class)
 @Composable
 fun ChatScreen(navigator: DestinationsNavigator, viewModel: ChatViewModel = hiltViewModel()) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner = LocalLifecycleOwner.current)
 
     Content(
         navigateToProfile = { navigator.navigate(it) },
