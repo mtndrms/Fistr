@@ -4,6 +4,12 @@
 It's like Tinder but not for dating it's for fighting.
 Find people to fight with!
 
+## Screenshots
+|:earth_americas:| :rocket:| :waning_crescent_moon:|
+| ------------------------- | ------------------ | ---------------------------------------- |
+| <img src="./screenshots/dark-0.png" width="216" height="444"> | <img src="./screenshots/dark-1.png" width="216" height="444"> | <img src="./screenshots/dark-2.png" width="216" height="444">|
+| <img src="./screenshots/light-0.png" width="216" height="444"> | <img src="./screenshots/light-1.png" width="216" height="444"> | <img src="./screenshots/light-2.png" width="216" height="444">|
+
 ## Used Technologies
 - Kotlin
 - Jetpack Compose
