@@ -1,22 +1,20 @@
 [versions]
-agp = "8.4.1"
-kotlin = "1.9.23"
+agp = "8.4.2"
+kotlin = "2.0.0"
 coreKtx = "1.13.1"
 datastore = "1.1.1"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.8.0"
-lifecycleRuntimeCompose = "2.8.0"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+lifecycleRuntimeKtx = "2.8.3"
+lifecycleRuntimeCompose = "2.8.3"
 activityCompose = "1.9.0"
-composeBom = "2024.05.00"
-ksp = "1.9.23-1.0.20"
+composeBom = "2024.06.00"
+ksp = "2.0.0-1.0.22"
 composeDestinations = "2.0.0-beta01"
 di = "2.51.1"
 hiltNavigationCompose = "1.2.0"
 room = "2.6.1"
-ktor = "2.3.9"
-supabase = "2.2.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,13 +41,11 @@ hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", v
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
-ktor-client = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
-supabase-bom = { group = "io.github.jan-tennert.supabase", name = "bom", version.ref = "supabase" }
-supabase-postgrestkt = { group = "io.github.jan-tennert.supabase", name = "postgrest-kt" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 di = { id = "com.google.dagger.hilt.android", version.ref = "di" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

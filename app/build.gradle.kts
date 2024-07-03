@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.di)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.compose.compiler)
     kotlin("kapt")
 }
 
@@ -43,9 +44,6 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.11"
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -81,11 +79,6 @@ dependencies {
     //room
     implementation(libs.room)
     ksp(libs.room.compiler)
-
-    //supabase
-    implementation(platform(libs.supabase.bom))
-    implementation(libs.supabase.postgrestkt)
-    implementation(libs.ktor.client)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
